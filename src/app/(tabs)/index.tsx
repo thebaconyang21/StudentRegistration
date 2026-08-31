@@ -1,4 +1,3 @@
-
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -11,10 +10,18 @@ export default function Home() {
   // TOTAL STUDENTS
   const totalStudents = students.length;
 
-  // TOTAL BSIT STUDENTS
-  const totalBSIT = students.filter(
-    (student) => student.course.toLowerCase() === "bsit",
-  ).length;
+  // COURSE COUNTS
+  const courseCounts: {
+    [key: string]: number;
+  } = {};
+
+  students.forEach((student) => {
+    const course = student.course.trim();
+
+    if (course !== "") {
+      courseCounts[course] = (courseCounts[course] || 0) + 1;
+    }
+  });
 
   // YEAR LEVEL COUNTS
   const firstYear = students.filter(
