@@ -1,9 +1,9 @@
 // Student Records
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 import {
   Alert,
-  FlatList,
+  ScrollView,
   StyleSheet,
   Text,
   TextInput,
@@ -21,145 +21,200 @@ export default function Students() {
   const { students, deleteStudent } = useStudents();
 
   const [searchText, setSearchText] = useState("");
+  const [selectedYear, setSelectedYear] = useState("All");
 
-  const filteredStudents = students.filter((student) => {
-    const search = searchText.toLowerCase();
+  // FILTER STUDENTS
+  const filteredStudents = useMemo(() => {
+    return students.filter((student) => {
+      const search = searchText.toLowerCase().trim();
 
-    return (
-      student.studentId.toLowerCase().includes(search) ||
-      student.fullName.toLowerCase().includes(search) ||
-      student.course.toLowerCase().includes(search) ||
-      student.yearLevel.toLowerCase().includes(search)
-    );
-  });
+      const matchesSearch =
+        student.fullName.toLowerCase().includes(search) ||
+        student.studentId.toLowerCase().includes(search) ||
+        student.course.toLowerCase().includes(search);
 
-  const handleDelete = (id: string) => {
+      const matchesYear =
+        selectedYear === "All" || student.yearLevel === selectedYear;
+
+      return matchesSearch && matchesYear;
+    });
+  }, [students, searchText, selectedYear]);
+
+  // DELETE CONFIRMATION
+  const handleDelete = (student: Student) => {
     Alert.alert(
       "Delete Student",
-      "Are you sure you want to delete this student?",
+      `Are you sure you want to delete ${student.fullName}?`,
       [
         {
           text: "Cancel",
           style: "cancel",
         },
-
         {
           text: "Delete",
           style: "destructive",
           onPress: () => {
-            deleteStudent(id);
+            deleteStudent(student.id);
           },
         },
       ],
     );
   };
 
-  const renderStudent = ({ item }: { item: Student }) => {
-    return (
-      <View style={styles.card}>
-        <View style={styles.headerRow}>
-          <View style={styles.avatar}>
-            <Text style={styles.avatarText}>
-              {item.fullName.charAt(0).toUpperCase()}
-            </Text>
-          </View>
-
-          <View style={styles.nameContainer}>
-            <Text style={styles.name}>{item.fullName}</Text>
-
-            <Text style={styles.id}>ID: {item.studentId}</Text>
-          </View>
-        </View>
-
-        <View style={styles.infoRow}>
-          <Text style={styles.label}>Age</Text>
-
-          <Text style={styles.value}>{item.age}</Text>
-        </View>
-
-        <View style={styles.infoRow}>
-          <Text style={styles.label}>Course</Text>
-
-          <Text style={styles.value}>{item.course}</Text>
-        </View>
-
-        <View style={styles.infoRow}>
-          <Text style={styles.label}>Year Level</Text>
-
-          <Text style={styles.value}>{item.yearLevel}</Text>
-        </View>
-
-        <View style={styles.buttonRow}>
-          <TouchableOpacity
-            style={styles.editButton}
-            onPress={() =>
-              router.push({
-                pathname: "/register",
-                params: {
-                  id: item.id,
-                },
-              })
-            }
-          >
-            <Text style={styles.buttonText}>Edit</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.deleteButton}
-            onPress={() => handleDelete(item.id)}
-          >
-            <Text style={styles.buttonText}>Delete</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    );
-  };
-
   return (
     <SafeAreaView style={styles.safeArea}>
-      <View style={styles.container}>
+      <ScrollView
+        contentContainerStyle={styles.container}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* HEADER */}
+
+        <View style={styles.header}>
+          <Text style={styles.title}>Student Records</Text>
+
+          <Text style={styles.subtitle}>
+            View and manage registered students
+          </Text>
+        </View>
+
         {/* SEARCH */}
 
-        <TextInput
-          style={styles.search}
-          placeholder="🔍 Search students..."
-          placeholderTextColor="#999"
-          value={searchText}
-          onChangeText={setSearchText}
-        />
+        <View style={styles.searchContainer}>
+          <Text style={styles.searchIcon}>🔍</Text>
 
-        {/* COUNT */}
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Search name, ID, or course..."
+            placeholderTextColor="#9ca3af"
+            value={searchText}
+            onChangeText={setSearchText}
+          />
 
-        <Text style={styles.count}>{filteredStudents.length} student(s)</Text>
+          {searchText.length > 0 && (
+            <TouchableOpacity onPress={() => setSearchText("")}>
+              <Text style={styles.clearButton}>✕</Text>
+            </TouchableOpacity>
+          )}
+        </View>
 
-        {/* LIST */}
+        {/* YEAR FILTER */}
 
-        <FlatList
-          data={filteredStudents}
-          keyExtractor={(item) => item.id}
-          renderItem={renderStudent}
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={styles.listContainer}
-          ListEmptyComponent={
-            <View style={styles.empty}>
-              <Text style={styles.emptyIcon}>📋</Text>
+        <Text style={styles.filterTitle}>Year Level</Text>
 
-              <Text style={styles.emptyTitle}>No students found</Text>
-
-              <Text style={styles.emptyText}>
-                Register a student to see the records here.
-              </Text>
-
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          style={styles.filterScroll}
+        >
+          {["All", "1st Year", "2nd Year", "3rd Year", "4th Year"].map(
+            (year) => (
               <TouchableOpacity
-                style={styles.emptyButton}
-                onPress={() => router.push("/register")}
+                key={year}
+                style={[
+                  styles.filterButton,
+                  selectedYear === year && styles.filterButtonActive,
+                ]}
+                onPress={() => setSelectedYear(year)}
               >
-                <Text style={styles.emptyButtonText}>Register Student</Text>
+                <Text
+                  style={[
+                    styles.filterText,
+                    selectedYear === year && styles.filterTextActive,
+                  ]}
+                >
+                  {year}
+                </Text>
               </TouchableOpacity>
+            ),
+          )}
+        </ScrollView>
+
+        {/* RESULT COUNT */}
+
+        <Text style={styles.resultCount}>
+          {filteredStudents.length} student
+          {filteredStudents.length !== 1 ? "s" : ""} found
+        </Text>
+
+        {/* STUDENT LIST */}
+
+        {filteredStudents.length === 0 ? (
+          <View style={styles.emptyCard}>
+            <Text style={styles.emptyIcon}>🔎</Text>
+
+            <Text style={styles.emptyTitle}>No Students Found</Text>
+
+            <Text style={styles.emptyText}>
+              Try changing your search or filter.
+            </Text>
+          </View>
+        ) : (
+          filteredStudents.map((student) => (
+            <View key={student.id} style={styles.studentCard}>
+              {/* STUDENT HEADER */}
+
+              <View style={styles.studentHeader}>
+                <View style={styles.avatar}>
+                  <Text style={styles.avatarText}>
+                    {student.fullName.charAt(0).toUpperCase()}
+                  </Text>
+                </View>
+
+                <View style={styles.studentTitleArea}>
+                  <Text style={styles.studentName}>{student.fullName}</Text>
+
+                  <Text style={styles.studentId}>ID: {student.studentId}</Text>
+                </View>
+              </View>
+
+              {/* INFORMATION */}
+
+              <View style={styles.infoRow}>
+                <Text style={styles.infoLabel}>Age</Text>
+
+                <Text style={styles.infoValue}>{student.age}</Text>
+              </View>
+
+              <View style={styles.infoRow}>
+                <Text style={styles.infoLabel}>Course</Text>
+
+                <Text style={styles.infoValue}>{student.course}</Text>
+              </View>
+
+              <View style={styles.infoRow}>
+                <Text style={styles.infoLabel}>Year Level</Text>
+
+                <Text style={styles.infoValue}>{student.yearLevel}</Text>
+              </View>
+
+              {/* ACTION BUTTONS */}
+
+              <View style={styles.actions}>
+                <TouchableOpacity
+                  style={styles.editButton}
+                  onPress={() =>
+                    router.push({
+                      pathname: "/register",
+                      params: {
+                        id: student.id,
+                      },
+                    })
+                  }
+                >
+                  <Text style={styles.editText}>✏️ Edit</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={styles.deleteButton}
+                  onPress={() => handleDelete(student)}
+                >
+                  <Text style={styles.deleteText}>🗑 Delete</Text>
+                </TouchableOpacity>
+              </View>
             </View>
-          }
-        />
-      </View>
+          ))
+        )}
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -171,40 +226,107 @@ const styles = StyleSheet.create({
   },
 
   container: {
-    flex: 1,
     padding: 20,
+    paddingBottom: 40,
   },
 
-  search: {
-    backgroundColor: "#ffffff",
-    borderWidth: 1,
-    borderColor: "#e5e7eb",
-    borderRadius: 10,
-    padding: 14,
-    fontSize: 15,
-    marginBottom: 10,
+  header: {
+    marginBottom: 20,
   },
 
-  count: {
+  title: {
+    fontSize: 27,
+    fontWeight: "bold",
+    color: "#111827",
+  },
+
+  subtitle: {
+    fontSize: 14,
     color: "#6b7280",
-    fontSize: 13,
-    marginBottom: 12,
+    marginTop: 5,
   },
 
-  listContainer: {
-    paddingBottom: 30,
-  },
-
-  card: {
+  searchContainer: {
     backgroundColor: "#ffffff",
-    borderRadius: 12,
-    padding: 16,
+    borderWidth: 1,
+    borderColor: "#d1d5db",
+    borderRadius: 10,
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 12,
+    marginBottom: 20,
+  },
+
+  searchIcon: {
+    fontSize: 18,
+    marginRight: 8,
+  },
+
+  searchInput: {
+    flex: 1,
+    paddingVertical: 13,
+    fontSize: 15,
+    color: "#111827",
+  },
+
+  clearButton: {
+    fontSize: 18,
+    color: "#6b7280",
+    padding: 5,
+  },
+
+  filterTitle: {
+    fontSize: 15,
+    fontWeight: "bold",
+    color: "#374151",
+    marginBottom: 8,
+  },
+
+  filterScroll: {
+    marginBottom: 15,
+  },
+
+  filterButton: {
+    paddingHorizontal: 15,
+    paddingVertical: 9,
+    borderRadius: 20,
+    backgroundColor: "#ffffff",
+    borderWidth: 1,
+    borderColor: "#d1d5db",
+    marginRight: 8,
+  },
+
+  filterButtonActive: {
+    backgroundColor: "#2563eb",
+    borderColor: "#2563eb",
+  },
+
+  filterText: {
+    fontSize: 13,
+    color: "#4b5563",
+  },
+
+  filterTextActive: {
+    color: "#ffffff",
+    fontWeight: "bold",
+  },
+
+  resultCount: {
+    fontSize: 14,
+    color: "#6b7280",
     marginBottom: 12,
+  },
+
+  studentCard: {
+    backgroundColor: "#ffffff",
+    borderRadius: 14,
+    padding: 18,
+    marginBottom: 14,
     borderWidth: 1,
     borderColor: "#e5e7eb",
   },
 
-  headerRow: {
+  studentHeader: {
     flexDirection: "row",
     alignItems: "center",
     marginBottom: 15,
@@ -213,30 +335,30 @@ const styles = StyleSheet.create({
   avatar: {
     width: 48,
     height: 48,
-    borderRadius: 25,
-    backgroundColor: "#2563eb",
-    alignItems: "center",
+    borderRadius: 24,
+    backgroundColor: "#dbeafe",
     justifyContent: "center",
+    alignItems: "center",
     marginRight: 12,
   },
 
   avatarText: {
-    color: "#ffffff",
     fontSize: 20,
     fontWeight: "bold",
+    color: "#2563eb",
   },
 
-  nameContainer: {
+  studentTitleArea: {
     flex: 1,
   },
 
-  name: {
+  studentName: {
     fontSize: 17,
     fontWeight: "bold",
     color: "#111827",
   },
 
-  id: {
+  studentId: {
     fontSize: 13,
     color: "#6b7280",
     marginTop: 3,
@@ -246,20 +368,22 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     paddingVertical: 7,
-    borderBottomWidth: 1,
-    borderBottomColor: "#f3f4f6",
+    borderTopWidth: 1,
+    borderTopColor: "#f3f4f6",
   },
 
-  label: {
+  infoLabel: {
+    fontSize: 14,
     color: "#6b7280",
   },
 
-  value: {
+  infoValue: {
+    fontSize: 14,
     fontWeight: "600",
     color: "#111827",
   },
 
-  buttonRow: {
+  actions: {
     flexDirection: "row",
     gap: 10,
     marginTop: 15,
@@ -267,28 +391,37 @@ const styles = StyleSheet.create({
 
   editButton: {
     flex: 1,
-    backgroundColor: "#f59e0b",
-    padding: 11,
+    backgroundColor: "#eff6ff",
+    paddingVertical: 11,
     borderRadius: 8,
     alignItems: "center",
+  },
+
+  editText: {
+    color: "#2563eb",
+    fontWeight: "bold",
   },
 
   deleteButton: {
     flex: 1,
-    backgroundColor: "#ef4444",
-    padding: 11,
+    backgroundColor: "#fef2f2",
+    paddingVertical: 11,
     borderRadius: 8,
     alignItems: "center",
   },
 
-  buttonText: {
-    color: "#ffffff",
+  deleteText: {
+    color: "#dc2626",
     fontWeight: "bold",
   },
 
-  empty: {
+  emptyCard: {
+    backgroundColor: "#ffffff",
+    borderRadius: 14,
+    padding: 35,
     alignItems: "center",
-    paddingTop: 60,
+    borderWidth: 1,
+    borderColor: "#e5e7eb",
   },
 
   emptyIcon: {
@@ -299,25 +432,13 @@ const styles = StyleSheet.create({
   emptyTitle: {
     fontSize: 18,
     fontWeight: "bold",
-    color: "#374151",
+    color: "#111827",
   },
 
   emptyText: {
-    textAlign: "center",
-    color: "#9ca3af",
+    fontSize: 14,
+    color: "#6b7280",
     marginTop: 5,
-  },
-
-  emptyButton: {
-    backgroundColor: "#2563eb",
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    borderRadius: 8,
-    marginTop: 15,
-  },
-
-  emptyButtonText: {
-    color: "#ffffff",
-    fontWeight: "bold",
+    textAlign: "center",
   },
 });
