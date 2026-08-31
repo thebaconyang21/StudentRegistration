@@ -28,6 +28,14 @@ export default function HomeScreen() {
   const [students, setStudents] = useState<Student[]>([]);
   const [editingId, setEditingId] = useState<string | null>(null);
 
+  const clearForm = () => {
+    setStudentId("");
+    setFullName("");
+    setAge("");
+    setCourse("");
+    setYearLevel("");
+    setEditingId(null);
+  };
   // const addStudent = () => {
   //   // Check if fields are empty
   //   if (
