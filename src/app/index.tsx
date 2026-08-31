@@ -131,6 +131,16 @@ export default function HomeScreen() {
     Alert.alert("Success", "Student successfully registered!");
   };
 
+  const editStudent = (student: Student) => {
+    setStudentId(student.studentId);
+    setFullName(student.fullName);
+    setAge(student.age);
+    setCourse(student.course);
+    setYearLevel(student.yearLevel);
+
+    setEditingId(student.id);
+  };
+
   const deleteStudent = (id: string) => {
     Alert.alert(
       "Delete Student",
