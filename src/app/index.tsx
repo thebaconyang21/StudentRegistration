@@ -247,7 +247,9 @@ export default function HomeScreen() {
         />
 
         <TouchableOpacity style={styles.addButton} onPress={addStudent}>
-          <Text style={styles.addButtonText}>+ Register Student</Text>
+          <Text style={styles.addButtonText}>
+            {editingId !== null ? "Update Student" : "+ Register Student"}
+          </Text>
         </TouchableOpacity>
       </View>
 
