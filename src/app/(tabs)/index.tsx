@@ -70,7 +70,7 @@ export default function Home() {
 
         {/* STATISTICS TITLE */}
 
-        <Text style={styles.sectionTitle}>Student Statistics</Text>
+        <Text style={styles.sectionTitle}>Course & Year Statistics</Text>
 
         {/* STATISTICS GRID */}
 
