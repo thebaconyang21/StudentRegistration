@@ -1,14 +1,8 @@
+// The (tabs) section will handle our main application screens.
 // Dashboard
-import { router } from "expo-router";
-import {
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import { useStudents } from "../context/StudentContext";
+
+import { SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
+import { useStudents } from "../../context/StudentContext";
 
 export default function Dashboard() {
   const { students } = useStudents();
@@ -38,21 +32,11 @@ export default function Dashboard() {
 
         {/* REGISTER */}
 
-        <TouchableOpacity
-          style={styles.registerButton}
-          onPress={() => router.push("/register")}
-        >
-          <Text style={styles.registerButtonText}>+ Register Student</Text>
-        </TouchableOpacity>
+        <Text style={styles.registerButtonText}>+ Register Student</Text>
 
         {/* VIEW STUDENTS */}
 
-        <TouchableOpacity
-          style={styles.viewButton}
-          onPress={() => router.push("/students")}
-        >
-          <Text style={styles.viewButtonText}>👨‍🎓 View Student Records</Text>
-        </TouchableOpacity>
+        <Text style={styles.viewButtonText}>👨‍🎓 View Student Records</Text>
 
         {/* QUICK INFORMATION */}
 
