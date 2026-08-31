@@ -274,6 +274,12 @@ export default function HomeScreen() {
 
       {/* STUDENT RECORDS */}
 
+      <TextInput
+        style={styles.searchInput}
+        placeholder="🔍 Search students..."
+        value={searchText}
+        onChangeText={setSearchText}
+      />
       <Text style={styles.recordsTitle}>Registered Students</Text>
 
       <FlatList
