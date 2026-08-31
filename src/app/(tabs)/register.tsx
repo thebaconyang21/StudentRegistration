@@ -2,19 +2,19 @@
 import { useEffect, useState } from "react";
 
 import {
-    Alert,
-    SafeAreaView,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  Alert,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
 
 import { router, useLocalSearchParams } from "expo-router";
 
-import { useStudents } from "../context/StudentContext";
+import { useStudents } from "../../context/StudentContext";
 
 export default function RegisterStudent() {
   const params = useLocalSearchParams();

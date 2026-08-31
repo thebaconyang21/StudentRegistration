@@ -1,3 +1,4 @@
+import { Ionicons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
 
 export default function TabsLayout() {
@@ -5,6 +6,8 @@ export default function TabsLayout() {
     <Tabs
       screenOptions={{
         headerShown: true,
+        tabBarActiveTintColor: "#2563eb",
+        tabBarInactiveTintColor: "#6b7280",
       }}
     >
       <Tabs.Screen
@@ -12,7 +15,9 @@ export default function TabsLayout() {
         options={{
           title: "Home",
           tabBarLabel: "Home",
-          tabBarIcon: () => "🏠",
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="home" size={size} color={color} />
+          ),
         }}
       />
 
@@ -21,7 +26,9 @@ export default function TabsLayout() {
         options={{
           title: "Students",
           tabBarLabel: "Students",
-          tabBarIcon: () => "👨‍🎓",
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="people" size={size} color={color} />
+          ),
         }}
       />
 
@@ -30,7 +37,9 @@ export default function TabsLayout() {
         options={{
           title: "Register",
           tabBarLabel: "Add",
-          tabBarIcon: () => "➕",
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="add-circle" size={size} color={color} />
+          ),
         }}
       />
     </Tabs>

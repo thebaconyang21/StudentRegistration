@@ -2,19 +2,19 @@
 import { useState } from "react";
 
 import {
-    Alert,
-    FlatList,
-    SafeAreaView,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  Alert,
+  FlatList,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
 
 import { router } from "expo-router";
 
-import { Student, useStudents } from "../context/StudentContext";
+import { Student, useStudents } from "../../context/StudentContext";
 
 export default function Students() {
   const { students, deleteStudent } = useStudents();
