@@ -38,6 +38,17 @@ export default function HomeScreen() {
     setYearLevel("");
     setEditingId(null);
   };
+
+  const filteredStudents = students.filter((student) => {
+    const search = searchText.toLowerCase();
+
+    return (
+      student.studentId.toLowerCase().includes(search) ||
+      student.fullName.toLowerCase().includes(search) ||
+      student.course.toLowerCase().includes(search) ||
+      student.yearLevel.toLowerCase().includes(search)
+    );
+  });
   // const addStudent = () => {
   //   // Check if fields are empty
   //   if (
