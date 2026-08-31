@@ -401,4 +401,34 @@ const styles = StyleSheet.create({
     color: "white",
     fontWeight: "bold",
   },
+
+  dashboardCard: {
+    backgroundColor: "white",
+    padding: 20,
+    borderRadius: 10,
+    marginBottom: 15,
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "#ddd",
+  },
+
+  dashboardLabel: {
+    fontSize: 16,
+    color: "#666",
+  },
+
+  dashboardNumber: {
+    fontSize: 32,
+    fontWeight: "bold",
+    marginTop: 5,
+  },
+
+  searchInput: {
+    backgroundColor: "white",
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 8,
+    padding: 12,
+    marginBottom: 15,
+  },
 });
