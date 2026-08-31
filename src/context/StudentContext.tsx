@@ -1,5 +1,13 @@
 // Shared student data
-import { createContext, ReactNode, useContext, useState } from "react";
+import {
+    createContext,
+    ReactNode,
+    useContext,
+    useEffect,
+    useState,
+} from "react";
+
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export type Student = {
   id: string;
@@ -19,9 +27,49 @@ type StudentContextType = {
 
 const StudentContext = createContext<StudentContextType | undefined>(undefined);
 
+const STORAGE_KEY = "@student_registration_data";
+
 export function StudentProvider({ children }: { children: ReactNode }) {
   const [students, setStudents] = useState<Student[]>([]);
 
+  const [isLoading, setIsLoading] = useState(true);
+
+  // LOAD STUDENTS WHEN APP STARTS
+  useEffect(() => {
+    loadStudents();
+  }, []);
+
+  // LOAD DATA FROM PHONE STORAGE
+  const loadStudents = async () => {
+    try {
+      const savedStudents = await AsyncStorage.getItem(STORAGE_KEY);
+
+      if (savedStudents !== null) {
+        setStudents(JSON.parse(savedStudents));
+      }
+    } catch (error) {
+      console.log("Error loading students:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // SAVE DATA TO PHONE STORAGE
+  useEffect(() => {
+    if (!isLoading) {
+      saveStudents();
+    }
+  }, [students, isLoading]);
+
+  const saveStudents = async () => {
+    try {
+      await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(students));
+    } catch (error) {
+      console.log("Error saving students:", error);
+    }
+  };
+
+  // ADD STUDENT
   const addStudent = (student: Omit<Student, "id">) => {
     const newStudent: Student = {
       id: Date.now().toString(),
@@ -31,6 +79,7 @@ export function StudentProvider({ children }: { children: ReactNode }) {
     setStudents((currentStudents) => [...currentStudents, newStudent]);
   };
 
+  // UPDATE STUDENT
   const updateStudent = (id: string, updatedStudent: Omit<Student, "id">) => {
     setStudents((currentStudents) =>
       currentStudents.map((student) =>
@@ -44,6 +93,7 @@ export function StudentProvider({ children }: { children: ReactNode }) {
     );
   };
 
+  // DELETE STUDENT
   const deleteStudent = (id: string) => {
     setStudents((currentStudents) =>
       currentStudents.filter((student) => student.id !== id),

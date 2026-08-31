@@ -30,30 +30,36 @@ export default function RegisterStudent() {
   const isEditing = editingStudent !== undefined;
 
   const [studentId, setStudentId] = useState("");
-
   const [fullName, setFullName] = useState("");
-
   const [age, setAge] = useState("");
-
   const [course, setCourse] = useState("");
-
   const [yearLevel, setYearLevel] = useState("");
 
+  // Load information only when EDITING
   useEffect(() => {
     if (editingStudent) {
       setStudentId(editingStudent.studentId);
-
       setFullName(editingStudent.fullName);
-
       setAge(editingStudent.age);
-
       setCourse(editingStudent.course);
-
       setYearLevel(editingStudent.yearLevel);
+    } else {
+      // Empty form when registering a new student
+      clearForm();
     }
   }, [studentIdParam]);
 
+  // Clear all fields
+  const clearForm = () => {
+    setStudentId("");
+    setFullName("");
+    setAge("");
+    setCourse("");
+    setYearLevel("");
+  };
+
   const saveStudent = () => {
+    // Check if all fields are filled
     if (
       studentId.trim() === "" ||
       fullName.trim() === "" ||
@@ -74,25 +80,37 @@ export default function RegisterStudent() {
       yearLevel: yearLevel.trim(),
     };
 
+    // EDIT STUDENT
     if (isEditing && editingStudent) {
       updateStudent(editingStudent.id, studentData);
 
       Alert.alert("Success", "Student information updated!", [
         {
           text: "OK",
-          onPress: () => router.replace("/students"),
+          onPress: () => {
+            clearForm();
+            router.replace("/students");
+          },
         },
       ]);
-    } else {
-      addStudent(studentData);
 
-      Alert.alert("Success", "Student successfully registered!", [
-        {
-          text: "OK",
-          onPress: () => router.replace("/students"),
-        },
-      ]);
+      return;
     }
+
+    // REGISTER NEW STUDENT
+    addStudent(studentData);
+
+    // Clear the form immediately
+    clearForm();
+
+    Alert.alert("Success", "Student successfully registered!", [
+      {
+        text: "OK",
+        onPress: () => {
+          router.replace("/students");
+        },
+      },
+    ]);
   };
 
   return (
@@ -101,8 +119,6 @@ export default function RegisterStudent() {
         contentContainerStyle={styles.container}
         keyboardShouldPersistTaps="handled"
       >
-        {/* HEADER */}
-
         <Text style={styles.title}>
           {isEditing ? "Edit Student" : "Register Student"}
         </Text>
@@ -113,9 +129,9 @@ export default function RegisterStudent() {
             : "Enter the student's information"}
         </Text>
 
-        {/* FORM */}
-
         <View style={styles.form}>
+          {/* STUDENT ID */}
+
           <Text style={styles.label}>Student ID</Text>
 
           <TextInput
@@ -125,6 +141,8 @@ export default function RegisterStudent() {
             onChangeText={setStudentId}
           />
 
+          {/* FULL NAME */}
+
           <Text style={styles.label}>Full Name</Text>
 
           <TextInput
@@ -133,6 +151,8 @@ export default function RegisterStudent() {
             value={fullName}
             onChangeText={setFullName}
           />
+
+          {/* AGE */}
 
           <Text style={styles.label}>Age</Text>
 
@@ -144,6 +164,8 @@ export default function RegisterStudent() {
             onChangeText={setAge}
           />
 
+          {/* COURSE */}
+
           <Text style={styles.label}>Course</Text>
 
           <TextInput
@@ -152,6 +174,8 @@ export default function RegisterStudent() {
             value={course}
             onChangeText={setCourse}
           />
+
+          {/* YEAR LEVEL */}
 
           <Text style={styles.label}>Year Level</Text>
 
@@ -162,7 +186,7 @@ export default function RegisterStudent() {
             onChangeText={setYearLevel}
           />
 
-          {/* SAVE */}
+          {/* SAVE BUTTON */}
 
           <TouchableOpacity style={styles.saveButton} onPress={saveStudent}>
             <Text style={styles.saveButtonText}>
@@ -170,11 +194,14 @@ export default function RegisterStudent() {
             </Text>
           </TouchableOpacity>
 
-          {/* CANCEL */}
+          {/* CANCEL BUTTON */}
 
           <TouchableOpacity
             style={styles.cancelButton}
-            onPress={() => router.back()}
+            onPress={() => {
+              clearForm();
+              router.back();
+            }}
           >
             <Text style={styles.cancelButtonText}>Cancel</Text>
           </TouchableOpacity>
