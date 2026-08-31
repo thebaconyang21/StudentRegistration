@@ -30,14 +30,6 @@ export default function Dashboard() {
           <Text style={styles.statIcon}>👨‍🎓</Text>
         </View>
 
-        {/* REGISTER */}
-
-        <Text style={styles.registerButtonText}>+ Register Student</Text>
-
-        {/* VIEW STUDENTS */}
-
-        <Text style={styles.viewButtonText}>👨‍🎓 View Student Records</Text>
-
         {/* QUICK INFORMATION */}
 
         <View style={styles.infoCard}>
@@ -108,36 +100,6 @@ const styles = StyleSheet.create({
 
   statIcon: {
     fontSize: 40,
-  },
-
-  registerButton: {
-    backgroundColor: "#2563eb",
-    padding: 16,
-    borderRadius: 10,
-    alignItems: "center",
-    marginBottom: 12,
-  },
-
-  registerButtonText: {
-    color: "#ffffff",
-    fontWeight: "bold",
-    fontSize: 16,
-  },
-
-  viewButton: {
-    backgroundColor: "#ffffff",
-    padding: 16,
-    borderRadius: 10,
-    alignItems: "center",
-    borderWidth: 1,
-    borderColor: "#2563eb",
-    marginBottom: 20,
-  },
-
-  viewButtonText: {
-    color: "#2563eb",
-    fontWeight: "bold",
-    fontSize: 16,
   },
 
   infoCard: {
