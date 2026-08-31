@@ -75,15 +75,17 @@ export default function Home() {
         {/* STATISTICS GRID */}
 
         <View style={styles.grid}>
-          {/* BSIT */}
+          {/* COURSE STATISTICS */}
 
-          <View style={styles.statCard}>
-            <Text style={styles.statIcon}>💻</Text>
+          {Object.entries(courseCounts).map(([course, count]) => (
+            <View style={styles.statCard} key={course}>
+              <Text style={styles.statIcon}>💻</Text>
 
-            <Text style={styles.statNumber}>{totalBSIT}</Text>
+              <Text style={styles.statNumber}>{count}</Text>
 
-            <Text style={styles.statLabel}>BSIT</Text>
-          </View>
+              <Text style={styles.statLabel}>{course}</Text>
+            </View>
+          ))}
 
           {/* 1ST YEAR */}
 
