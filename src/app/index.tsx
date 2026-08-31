@@ -283,7 +283,7 @@ export default function HomeScreen() {
       <Text style={styles.recordsTitle}>Registered Students</Text>
 
       <FlatList
-        data={students}
+        data={filteredStudents}
         keyExtractor={(item) => item.id}
         renderItem={renderStudent}
         ListEmptyComponent={
