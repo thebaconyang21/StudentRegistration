@@ -191,6 +191,20 @@ export default function Students() {
 
               <View style={styles.actions}>
                 <TouchableOpacity
+                  style={styles.viewButton}
+                  onPress={() =>
+                    router.push({
+                      pathname: "/student-details",
+                      params: {
+                        id: student.id,
+                      },
+                    })
+                  }
+                >
+                  <Text style={styles.viewText}>👁 View</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
                   style={styles.editButton}
                   onPress={() =>
                     router.push({
@@ -387,6 +401,19 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     gap: 10,
     marginTop: 15,
+  },
+
+  viewButton: {
+    flex: 1,
+    backgroundColor: "#f0fdf4",
+    paddingVertical: 11,
+    borderRadius: 8,
+    alignItems: "center",
+  },
+
+  viewText: {
+    color: "#16a34a",
+    fontWeight: "bold",
   },
 
   editButton: {
