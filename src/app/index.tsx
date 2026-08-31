@@ -26,6 +26,44 @@ export default function HomeScreen() {
   const [yearLevel, setYearLevel] = useState("");
 
   const [students, setStudents] = useState<Student[]>([]);
+  const [editingId, setEditingId] = useState<string | null>(null);
+
+  // const addStudent = () => {
+  //   // Check if fields are empty
+  //   if (
+  //     studentId.trim() === "" ||
+  //     fullName.trim() === "" ||
+  //     age.trim() === "" ||
+  //     course.trim() === "" ||
+  //     yearLevel.trim() === ""
+  //   ) {
+  //     Alert.alert("Incomplete Information", "Please fill in all fields.");
+
+  //     return;
+  //   }
+
+  //   // Create new student
+  //   const newStudent: Student = {
+  //     id: Date.now().toString(),
+  //     studentId: studentId,
+  //     fullName: fullName,
+  //     age: age,
+  //     course: course,
+  //     yearLevel: yearLevel,
+  //   };
+
+  //   // Add student to the list
+  //   setStudents([...students, newStudent]);
+
+  //   // Clear the form
+  //   setStudentId("");
+  //   setFullName("");
+  //   setAge("");
+  //   setCourse("");
+  //   setYearLevel("");
+
+  //   Alert.alert("Success", "Student successfully registered!");
+  // };
 
   const addStudent = () => {
     // Check if fields are empty
@@ -41,6 +79,32 @@ export default function HomeScreen() {
       return;
     }
 
+    // If we are editing a student
+    if (editingId !== null) {
+      setStudents(
+        students.map((student) =>
+          student.id === editingId
+            ? {
+                ...student,
+                studentId: studentId,
+                fullName: fullName,
+                age: age,
+                course: course,
+                yearLevel: yearLevel,
+              }
+            : student,
+        ),
+      );
+
+      setEditingId(null);
+
+      clearForm();
+
+      Alert.alert("Success", "Student information updated!");
+
+      return;
+    }
+
     // Create new student
     const newStudent: Student = {
       id: Date.now().toString(),
@@ -51,15 +115,10 @@ export default function HomeScreen() {
       yearLevel: yearLevel,
     };
 
-    // Add student to the list
+    // Add student
     setStudents([...students, newStudent]);
 
-    // Clear the form
-    setStudentId("");
-    setFullName("");
-    setAge("");
-    setCourse("");
-    setYearLevel("");
+    clearForm();
 
     Alert.alert("Success", "Student successfully registered!");
   };
