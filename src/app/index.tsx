@@ -210,6 +210,12 @@ export default function HomeScreen() {
     <View style={styles.container}>
       <Text style={styles.title}>Student Registration System</Text>
 
+      <View style={styles.dashboardCard}>
+        <Text style={styles.dashboardLabel}>Total Students</Text>
+
+        <Text style={styles.dashboardNumber}>{students.length}</Text>
+      </View>
+
       {/* FORM */}
 
       <View style={styles.form}>
