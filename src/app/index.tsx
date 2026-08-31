@@ -340,10 +340,10 @@ const styles = StyleSheet.create({
   },
 
   deleteButton: {
+    flex: 1,
     backgroundColor: "#dc2626",
     padding: 10,
     borderRadius: 5,
-    marginTop: 10,
     alignItems: "center",
   },
 
@@ -356,5 +356,24 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "#777",
     marginTop: 20,
+  },
+
+  buttonRow: {
+    flexDirection: "row",
+    gap: 10,
+    marginTop: 10,
+  },
+
+  editButton: {
+    flex: 1,
+    backgroundColor: "#f59e0b",
+    padding: 10,
+    borderRadius: 5,
+    alignItems: "center",
+  },
+
+  buttonText: {
+    color: "white",
+    fontWeight: "bold",
   },
 });
