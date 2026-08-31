@@ -60,36 +60,80 @@ export default function RegisterStudent() {
   };
 
   const saveStudent = () => {
-    // Check if all fields are filled
+    // Remove unnecessary spaces
+    const cleanStudentId = studentId.trim();
+    const cleanFullName = fullName.trim();
+    const cleanAge = age.trim();
+    const cleanCourse = course.trim();
+    const cleanYearLevel = yearLevel.trim();
+
+    // 1. Check empty fields
     if (
-      studentId.trim() === "" ||
-      fullName.trim() === "" ||
-      age.trim() === "" ||
-      course.trim() === "" ||
-      yearLevel.trim() === ""
+      cleanStudentId === "" ||
+      cleanFullName === "" ||
+      cleanAge === "" ||
+      cleanCourse === "" ||
+      cleanYearLevel === ""
     ) {
       Alert.alert("Incomplete Information", "Please fill in all fields.");
 
       return;
     }
 
+    // 2. Check if age is a number
+    const numericAge = Number(cleanAge);
+
+    if (isNaN(numericAge)) {
+      Alert.alert("Invalid Age", "Age must be a number.");
+
+      return;
+    }
+
+    // 3. Check reasonable age
+    if (numericAge < 10 || numericAge > 100) {
+      Alert.alert(
+        "Invalid Age",
+        "Please enter a valid age between 10 and 100.",
+      );
+
+      return;
+    }
+
+    // 4. Check duplicate Student ID
+    const duplicateStudent = students.find(
+      (student) =>
+        student.studentId.toLowerCase() === cleanStudentId.toLowerCase() &&
+        student.id !== studentIdParam,
+    );
+
+    if (duplicateStudent) {
+      Alert.alert(
+        "Duplicate Student ID",
+        "This Student ID is already registered.",
+      );
+
+      return;
+    }
+
+    // 5. Create student data
     const studentData = {
-      studentId: studentId.trim(),
-      fullName: fullName.trim(),
-      age: age.trim(),
-      course: course.trim(),
-      yearLevel: yearLevel.trim(),
+      studentId: cleanStudentId,
+      fullName: cleanFullName,
+      age: cleanAge,
+      course: cleanCourse,
+      yearLevel: cleanYearLevel,
     };
 
-    // EDIT STUDENT
+    // 6. EDIT EXISTING STUDENT
     if (isEditing && editingStudent) {
       updateStudent(editingStudent.id, studentData);
+
+      clearForm();
 
       Alert.alert("Success", "Student information updated!", [
         {
           text: "OK",
           onPress: () => {
-            clearForm();
             router.replace("/students");
           },
         },
@@ -98,10 +142,9 @@ export default function RegisterStudent() {
       return;
     }
 
-    // REGISTER NEW STUDENT
+    // 7. REGISTER NEW STUDENT
     addStudent(studentData);
 
-    // Clear the form immediately
     clearForm();
 
     Alert.alert("Success", "Student successfully registered!", [
