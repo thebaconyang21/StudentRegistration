@@ -174,12 +174,21 @@ export default function HomeScreen() {
 
         <Text>Year Level: {item.yearLevel}</Text>
 
-        <TouchableOpacity
-          style={styles.deleteButton}
-          onPress={() => deleteStudent(item.id)}
-        >
-          <Text style={styles.deleteButtonText}>Delete</Text>
-        </TouchableOpacity>
+        <View style={styles.buttonRow}>
+          <TouchableOpacity
+            style={styles.editButton}
+            onPress={() => editStudent(item)}
+          >
+            <Text style={styles.buttonText}>Edit</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.deleteButton}
+            onPress={() => deleteStudent(item.id)}
+          >
+            <Text style={styles.buttonText}>Delete</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     );
   };
