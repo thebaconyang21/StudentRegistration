@@ -1,3 +1,4 @@
+// Navigation
 import { Stack } from "expo-router";
 import { StudentProvider } from "../context/StudentContext";
 
@@ -6,23 +7,9 @@ export default function RootLayout() {
     <StudentProvider>
       <Stack>
         <Stack.Screen
-          name="index"
+          name="(tabs)"
           options={{
-            title: "Dashboard",
-          }}
-        />
-
-        <Stack.Screen
-          name="students"
-          options={{
-            title: "Student Records",
-          }}
-        />
-
-        <Stack.Screen
-          name="register"
-          options={{
-            title: "Register Student",
+            headerShown: false,
           }}
         />
       </Stack>
