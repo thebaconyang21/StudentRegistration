@@ -28,6 +28,8 @@ export default function HomeScreen() {
   const [students, setStudents] = useState<Student[]>([]);
   const [editingId, setEditingId] = useState<string | null>(null);
 
+  const [searchText, setSearchText] = useState("");
+
   const clearForm = () => {
     setStudentId("");
     setFullName("");
