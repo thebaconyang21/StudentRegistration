@@ -1,7 +1,9 @@
 // The (tabs) section will handle our main application screens.
 // Dashboard
 
-import { SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
+
+import { SafeAreaView } from "react-native-safe-area-context";
 import { useStudents } from "../../context/StudentContext";
 
 export default function Dashboard() {
